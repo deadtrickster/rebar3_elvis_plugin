@@ -1,10 +1,11 @@
 {application, rebar3_elvis_plugin,
- [{description, ""},
+ [{description, "Rebar3 Elvis plugin"},
   {vsn, "0.0.1"},
   {registered, []},
   {applications,
    [kernel,
-    stdlib
+    stdlib,
+    elvis_core
    ]},
   {env,[]},
   {modules, []},

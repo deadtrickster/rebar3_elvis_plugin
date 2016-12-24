@@ -5,6 +5,7 @@ defmodule Rebar3ElvisPlugin.Mixfile do
     [app: :rebar3_elvis_plugin,
      version: "0.0.2",
      description: description,
+     deps: deps(),
      package: package]
   end
 
@@ -12,6 +13,11 @@ defmodule Rebar3ElvisPlugin.Mixfile do
     """
     Rebar3 Elvis plugin
     """
+  end
+
+  defp deps do
+    [{:katana_code, "~> 0.1.0"},
+     {:zipper, "~> 1.0.1"}]
   end
 
   defp package do

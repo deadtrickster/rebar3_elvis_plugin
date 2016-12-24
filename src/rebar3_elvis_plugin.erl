@@ -26,15 +26,25 @@ init(State) ->
 -spec do(rebar_state:t()) -> {ok, rebar_state:t()} | {error, string()}.
 do(State) ->
   Config = rebar_state:get(State, elvis, elvis_config:default()),
-  case elvis_core:rock(Config) of
-    ok ->
-      {ok, State};
-    {fail, Files} ->
-      {error, {?MODULE, Files}}
+  try elvis_core:rock(Config) of
+      ok -> {ok, State};
+      {fail, Files} -> {error, {?MODULE, {rules, Files}}}
+  catch
+    throw:{invalid_config, ICReason} ->
+      {error, {?MODULE, {invalid_config, ICReason}}}
   end.
 
--spec format_error(any()) -> iolist().
-format_error(_Reason) ->
+-spec format_error({kind, any()}) -> iolist().
+format_error({invalid_config, {missing_dirs, Group}}) ->
+  rebar_api:debug("Elvis config error group: ~p", [Group]),
+  io_lib:format("Elvis config is invalid: missing 'dirs' key.", []);
+format_error({invalid_config, {missing_filter, Group}}) ->
+  rebar_api:debug("Group: ~p", [Group]),
+  io_lib:format("Elvis config is invalid: missing 'filter' key.", []);
+format_error({invalid_config, {missing_rules, Group}}) ->
+  rebar_api:debug("Group: ~p", [Group]),
+  io_lib:format("Elvis config is invalid: missing 'rules' key.", []);
+format_error({rules, _Reason}) ->
   io_lib:format("You disappointed Elvis. Not good.", []).
 
 %% ===================================================================

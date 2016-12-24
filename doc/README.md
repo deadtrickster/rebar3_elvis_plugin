@@ -49,5 +49,5 @@ MIT
 
 
 <table width="100%" border="0" summary="list of modules">
-<tr><td><a href="https://github.com/deadtrickster/rebar3_elvis_plugin/blob/master/doc/rebar3_elvis_plugin.md" class="module">rebar3_elvis_plugin</a></td></tr></table>
+<tr><td><a href="rebar3_elvis_plugin.md" class="module">rebar3_elvis_plugin</a></td></tr></table>
 

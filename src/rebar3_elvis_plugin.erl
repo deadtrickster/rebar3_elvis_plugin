@@ -34,8 +34,8 @@ do(State) ->
   end.
 
 -spec format_error(any()) -> iolist().
-format_error(Reason) ->
-  io_lib:format("~p", [Reason]).
+format_error(_Reason) ->
+  io_lib:format("You disappointed Elvis. Not good.", []).
 
 %% ===================================================================
 %% Internal functions

@@ -20,13 +20,13 @@ Section order:
 - Deprecations
 - Private Parts
 
-Install the `git` pre-commit hook:
+Install the `git' pre-commit hook:
 
 <pre lang="bash">
 ./bin/pre-commit.sh install
 </pre>
 
-The pre-commit check can be skipped by passing `--no-verify` to `git commit`.
+The pre-commit check can be skipped by passing `--no-verify' to `git commit'.
 
 ## License
 

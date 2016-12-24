@@ -9,6 +9,8 @@
 [![Build Status][Travis badge]][Travis link]
 [![Coverage Status][Coveralls badge]][Coveralls link]
 
+Based on https://github.com/inaka/elvis_core
+
 ## Contributing
 
 Section order:

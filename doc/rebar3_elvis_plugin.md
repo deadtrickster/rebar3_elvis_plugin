@@ -30,7 +30,7 @@ do(State::<a href="rebar_state.md#type-t">rebar_state:t()</a>) -&gt; {ok, <a hre
 ### format_error/1 ###
 
 <pre><code>
-format_error(Reason::any()) -&gt; iolist()
+format_error(X1::{kind, any()}) -&gt; iolist()
 </code></pre>
 <br />
 

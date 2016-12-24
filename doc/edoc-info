@@ -1,3 +1,5 @@
 %% encoding: UTF-8
 {application,rebar3_elvis_plugin}.
-{modules,[rebar3_elvis_plugin]}.
+{modules,[elvis_code,elvis_config,elvis_core,elvis_file,elvis_project,
+          elvis_result,elvis_rulesets,elvis_style,elvis_utils,
+          rebar3_elvis_plugin]}.

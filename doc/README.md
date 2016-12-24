@@ -11,6 +11,8 @@ __Version:__ 0.0.1
 [![Build Status][Travis badge]][Travis link]
 [![Coverage Status][Coveralls badge]][Coveralls link]
 
+Based on https://github.com/inaka/elvis_core
+
 ## Contributing
 
 Section order:
@@ -49,5 +51,14 @@ MIT
 
 
 <table width="100%" border="0" summary="list of modules">
+<tr><td><a href="elvis_code.md" class="module">elvis_code</a></td></tr>
+<tr><td><a href="elvis_config.md" class="module">elvis_config</a></td></tr>
+<tr><td><a href="elvis_core.md" class="module">elvis_core</a></td></tr>
+<tr><td><a href="elvis_file.md" class="module">elvis_file</a></td></tr>
+<tr><td><a href="elvis_project.md" class="module">elvis_project</a></td></tr>
+<tr><td><a href="elvis_result.md" class="module">elvis_result</a></td></tr>
+<tr><td><a href="elvis_rulesets.md" class="module">elvis_rulesets</a></td></tr>
+<tr><td><a href="elvis_style.md" class="module">elvis_style</a></td></tr>
+<tr><td><a href="elvis_utils.md" class="module">elvis_utils</a></td></tr>
 <tr><td><a href="rebar3_elvis_plugin.md" class="module">rebar3_elvis_plugin</a></td></tr></table>
 

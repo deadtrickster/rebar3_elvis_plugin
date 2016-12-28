@@ -5,7 +5,7 @@
          format_error/1]).
 
 -define(PROVIDER, elvis).
--define(DEPS, [compile]).
+-define(DEPS, []).
 
 %% ===================================================================
 %% Public API
@@ -36,6 +36,8 @@ do(State) ->
     end.
 
 -spec format_error({kind, any()}) -> iolist().
+format_error({invalid_config, empty_confg}) ->
+    io_lib:format("Elvis config is empty (not found)");
 format_error({invalid_config, {missing_dirs, Group}}) ->
     rebar_api:debug("Elvis config error group: ~p", [Group]),
     io_lib:format("Elvis config is invalid: missing 'dirs' key.", []);

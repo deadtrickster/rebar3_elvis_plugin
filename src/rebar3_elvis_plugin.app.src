@@ -1,6 +1,6 @@
 {application, rebar3_elvis_plugin,
  [{description, "Rebar3 Elvis plugin"},
-  {vsn, "0.0.2"},
+  {vsn, "0.0.3"},
   {registered, []},
   {applications,
    [kernel,

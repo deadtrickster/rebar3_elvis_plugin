@@ -3,7 +3,7 @@ defmodule Rebar3ElvisPlugin.Mixfile do
 
   def project do
     [app: :rebar3_elvis_plugin,
-     version: "0.0.2",
+     version: "0.0.3",
      description: description,
      deps: deps(),
      package: package]

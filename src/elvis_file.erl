@@ -23,6 +23,12 @@
     {binary(), file()} | {error, enoent}.
 src(File = #{content := Content}) ->
     {Content, File};
+src(File = #{source := stdin}) ->
+    case read_stdin() of
+        {ok, Content} ->
+            src(File#{content => list_to_binary(Content)});
+        Error -> Error
+    end;
 src(File = #{path := Path}) ->
     case file:read_file(Path) of
         {ok, Content} ->
@@ -123,3 +129,11 @@ escape_all_chars(Glob) -> re:replace(Glob, ".", "[&]", [global]).
 replace_stars(Glob) -> re:replace(Glob, "[[][*][]]", ".*", [global]).
 
 replace_questions(Glob) -> re:replace(Glob, "[[][?][]]", ".", [global]).
+
+read_stdin() ->
+    case io:get_line(standard_io, "") of
+        eof  -> {ok, []};
+        {error, Reason} -> Reason;
+        Line -> {ok, Rest} = read_stdin(),
+                {ok, Line ++ Rest}
+    end.

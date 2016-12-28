@@ -19,7 +19,10 @@ init(State) ->
                                  {bare, true},
                                  {example, "rebar3 elvis"},
                                  {short_desc, short_desc()},
-                                 {desc, desc()}]),
+                                 {desc, desc()},
+                                 {opts, [{read_from_stdin, false,
+                                          "read-from-stdin", string,
+                                          "Read Erlang source from stdin."}]}]),
     State1 = rebar_state:add_provider(State, Provider),
     {ok, State1}.
 
@@ -27,7 +30,12 @@ init(State) ->
 do(State) ->
     Config = rebar_state:get(State, elvis, elvis_config:default()),
     rebar_api:debug("Elvis configuration: ~p", [Config]),
-    try elvis_core:rock(Config) of
+    try case find_read_from_stdin_option(State) of
+            {ok, Path} ->
+                elvis_core:rock_this({stdin, Path}, Config);
+            _ ->
+                elvis_core:rock(Config)
+        end of
         ok -> {ok, State};
         {fail, Files} -> {error, {?MODULE, {rules, Files}}}
     catch
@@ -66,3 +74,17 @@ desc() ->
       [short_desc(),
        "https://github.com/inaka/elvis_core/wiki/Rules"
       ]).
+
+-spec find_read_from_stdin_option(rebar_state:t()) -> boolean().
+find_read_from_stdin_option(State) ->
+    {Opts, _} = rebar_state:command_parsed_args(State),
+    {ok, debug_get_value(read_from_stdin, Opts, "<stdin>",
+                         "Found read from stdin switch command line option.")}.
+
+debug_get_value(Key, List, Default, Description) ->
+    case proplists:get_value(Key, List, Default) of
+        Default -> Default;
+        Value ->
+            rebar_api:debug(Description, []),
+            Value
+    end.

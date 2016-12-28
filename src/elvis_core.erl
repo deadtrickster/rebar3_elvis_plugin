@@ -41,17 +41,39 @@ rock(Config) ->
     lists:foldl(fun combine_results/2, ok, Results).
 
 -spec rock_this(target()) ->
-    ok | {fail, elvis_result:file()}.
+                       ok | {fail, elvis_result:file()}.
 rock_this(Target) ->
     Config = elvis_config:default(),
     rock_this(Target, Config).
 
 -spec rock_this(target(), elvis_config:config()) ->
-    ok | {fail, elvis_result:file()}.
+                       ok | {fail, elvis_result:file()}.
 rock_this(Module, Config) when is_atom(Module) ->
     ModuleInfo = Module:module_info(compile),
     Path = proplists:get_value(source, ModuleInfo),
     rock_this(Path, Config);
+rock_this({stdin, Path}, Config) ->
+    elvis_config:validate(Config),
+    NewConfig = elvis_config:normalize(Config),
+    Dirname = filename:dirname(Path),
+    Filename = filename:basename(Path),
+    File = case elvis_file:find_files([Dirname], Filename) of
+               [] -> throw({enoent, Path});
+               [File0] -> File0#{source => stdin}
+           end,
+
+    FilterFun = fun(Cfg) ->
+                        Filter = elvis_config:filter(Cfg),
+                        Dirs = elvis_config:dirs(Cfg),
+                        IgnoreList = elvis_config:ignore(Cfg),
+                        [] =/= elvis_file:filter_files([File], Dirs, Filter,
+                                                       IgnoreList)
+                end,
+    FilteredConfig = lists:filter(FilterFun, NewConfig),
+    LoadedFile = load_file_data(FilteredConfig, File),
+    ApplyRulesFun = fun(Cfg) -> apply_rules(Cfg, LoadedFile) end,
+    Results = lists:map(ApplyRulesFun, FilteredConfig),
+    elvis_result_status(Results);
 rock_this(Path, Config) ->
     elvis_config:validate(Config),
     NewConfig = elvis_config:normalize(Config),
@@ -107,7 +129,7 @@ load_file_data(Config, File) ->
 
 -spec combine_results(ok | {fail, [elvis_result:file()]},
                       ok | {fail, [elvis_result:file()]}) ->
-    ok | {fail, [elvis_result:file()]}.
+                             ok | {fail, [elvis_result:file()]}.
 combine_results(ok, Acc) ->
     Acc;
 combine_results(Item, ok) ->
@@ -116,7 +138,7 @@ combine_results({fail, ItemResults}, {fail, AccResults}) ->
     {fail, ItemResults ++ AccResults}.
 
 -spec apply_rules(map(), File::elvis_file:file()) ->
-    elvis_result:file().
+                         elvis_result:file().
 apply_rules(Config, File) ->
     Rules = elvis_config:rules(Config),
     Acc = {[], Config, File},
@@ -137,12 +159,12 @@ apply_rule({Module, Function, ConfigArgs}, {Result, Config, File}) ->
                 throw({invalid_config, disable_without_ruleset})
         end,
     RuleResult = try
-                    Results = Module:Function(Config, File, ConfigMap),
-                    SortFun = fun(#{line_num := L1}, #{line_num := L2}) ->
-                                  L1 =< L2
-                              end,
-                    SortResults = lists:sort(SortFun, Results),
-                    elvis_result:new(rule, Function, SortResults)
+                     Results = Module:Function(Config, File, ConfigMap),
+                     SortFun = fun(#{line_num := L1}, #{line_num := L2}) ->
+                                       L1 =< L2
+                               end,
+                     SortResults = lists:sort(SortFun, Results),
+                     elvis_result:new(rule, Function, SortResults)
                  catch
                      _:Reason ->
                          Msg = "'~p' while applying rule '~p'.",

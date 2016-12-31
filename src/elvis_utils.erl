@@ -18,7 +18,8 @@
          notice/2,
          error_prn/1,
          error_prn/2,
-         parse_colors/1
+         parse_colors/1,
+         print/2
         ]).
 
 -export_type([file/0]).

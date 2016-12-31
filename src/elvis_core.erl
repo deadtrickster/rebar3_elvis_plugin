@@ -145,7 +145,7 @@ apply_rules(Config, File) ->
     {RulesResults, _, _} = lists:foldl(fun apply_rule/2, Acc, Rules),
 
     Results = elvis_result:new(file, File, RulesResults),
-    elvis_result:print(Results),
+    elvis_print:print(Config, Results),
     Results.
 
 apply_rule({Module, Function}, {Result, Config, File}) ->

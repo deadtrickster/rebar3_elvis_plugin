@@ -5,8 +5,7 @@
          new/3,
          new/4,
          status/1,
-         clean/1,
-         print/1
+         clean/1
         ]).
 
 -export([
@@ -23,7 +22,8 @@
 -export_type([
               item/0,
               rule/0,
-              file/0
+              file/0,
+              elvis_error/0
              ]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -100,37 +100,6 @@ get_info(#{info := Info}) -> Info.
 
 -spec get_line_num(item()) -> integer().
 get_line_num(#{line_num := LineNum}) -> LineNum.
-
-%% Print
-
--spec print(item() | rule() | elvis_error() | [file()]) -> ok.
-print([]) ->
-    ok;
-print([Result | Results]) ->
-    print(Result),
-    print(Results);
-%% File
-print(#{file := File, rules := Rules}) ->
-    Path = elvis_file:path(File),
-    Status = case status(Rules) of
-                 ok -> "{{green-bold}}OK";
-                 fail -> "{{red-bold}}FAIL"
-             end,
-
-    elvis_utils:notice("# ~s [~s{{white-bold}}]", [Path, Status]),
-    print(Rules);
-%% Rule
-print(#{items := []}) ->
-    ok;
-print(#{name := Name, items := Items}) ->
-    elvis_utils:notice("  - ~s", [atom_to_list(Name)]),
-    print(Items);
-%% Item
-print(#{message := Msg, info := Info}) ->
-    elvis_utils:notice("    - " ++ Msg, Info);
-%% Error
-print(#{error_msg := Msg, info := Info}) ->
-    elvis_utils:error_prn(Msg, Info).
 
 -spec status([file() | rule()]) -> ok | fail.
 status([]) ->

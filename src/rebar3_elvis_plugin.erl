@@ -78,8 +78,12 @@ desc() ->
 -spec find_read_from_stdin_option(rebar_state:t()) -> boolean().
 find_read_from_stdin_option(State) ->
     {Opts, _} = rebar_state:command_parsed_args(State),
-    {ok, debug_get_value(read_from_stdin, Opts, "<stdin>",
-                         "Found read from stdin switch command line option.")}.
+    case debug_get_value(read_from_stdin, Opts, undefined,
+                         "Found read from stdin switch command line option.") of
+        undefined ->
+            undefined;
+        Value -> {ok, Value}
+    end.
 
 debug_get_value(Key, List, Default, Description) ->
     case proplists:get_value(Key, List, Default) of
